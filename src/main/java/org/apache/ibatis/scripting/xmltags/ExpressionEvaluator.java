@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2021 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -27,6 +27,10 @@ import org.apache.ibatis.builder.BuilderException;
  * @author Clinton Begin
  */
 public class ExpressionEvaluator {
+
+    public Object evaluate(String expression, Object parameterObject) {
+        return OgnlCache.getValue(expression, parameterObject);
+    }
 
   public boolean evaluateBoolean(String expression, Object parameterObject) {
     Object value = OgnlCache.getValue(expression, parameterObject);

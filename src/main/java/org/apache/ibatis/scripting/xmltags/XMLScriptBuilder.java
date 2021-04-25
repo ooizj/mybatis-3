@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2021 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -57,6 +57,8 @@ public class XMLScriptBuilder extends BaseBuilder {
     nodeHandlerMap.put("set", new SetHandler());
     nodeHandlerMap.put("foreach", new ForEachHandler());
     nodeHandlerMap.put("if", new IfHandler());
+    nodeHandlerMap.put("isEmpty", new IsEmptyHandler());
+    nodeHandlerMap.put("isNotEmpty", new IsNotEmptyHandler());
     nodeHandlerMap.put("choose", new ChooseHandler());
     nodeHandlerMap.put("when", new IfHandler());
     nodeHandlerMap.put("otherwise", new OtherwiseHandler());
@@ -192,6 +194,36 @@ public class XMLScriptBuilder extends BaseBuilder {
       String test = nodeToHandle.getStringAttribute("test");
       IfSqlNode ifSqlNode = new IfSqlNode(mixedSqlNode, test);
       targetContents.add(ifSqlNode);
+    }
+  }
+
+  private class IsEmptyHandler implements NodeHandler {
+    public IsEmptyHandler() {
+      // Prevent Synthetic Access
+    }
+
+    @Override
+    public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
+      MixedSqlNode mixedSqlNode = parseDynamicTags(nodeToHandle);
+      String prepend = nodeToHandle.getStringAttribute("prepend");
+      String property = nodeToHandle.getStringAttribute("property");
+      IsEmptySqlNode sqlNode = new IsEmptySqlNode(mixedSqlNode, prepend, property);
+      targetContents.add(sqlNode);
+    }
+  }
+
+  private class IsNotEmptyHandler implements NodeHandler {
+    public IsNotEmptyHandler() {
+      // Prevent Synthetic Access
+    }
+
+    @Override
+    public void handleNode(XNode nodeToHandle, List<SqlNode> targetContents) {
+      MixedSqlNode mixedSqlNode = parseDynamicTags(nodeToHandle);
+      String prepend = nodeToHandle.getStringAttribute("prepend");
+      String property = nodeToHandle.getStringAttribute("property");
+      IsNotEmptySqlNode sqlNode = new IsNotEmptySqlNode(mixedSqlNode, prepend, property);
+      targetContents.add(sqlNode);
     }
   }
 
