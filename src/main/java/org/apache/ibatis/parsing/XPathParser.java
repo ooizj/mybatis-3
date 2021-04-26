@@ -254,8 +254,6 @@ public class XPathParser {
         public void warning(SAXParseException exception) throws SAXException {
         }
       });
-
-      System.out.println("-----------------------------------------------"+inputSource);
       return builder.parse(inputSource);
     } catch (Exception e) {
       throw new BuilderException("Error creating document instance.  Cause: " + e, e);
