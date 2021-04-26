@@ -38,6 +38,7 @@ public class IsEmptySqlNode implements SqlNode {
   public boolean apply(DynamicContext context) {
     Object value = evaluator.evaluate(property, context.getBindings());
     if (isEmpty(value)) {
+      context.appendSql(prepend);
       contents.apply(context);
       return true;
     }
