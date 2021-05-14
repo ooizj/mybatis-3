@@ -30,8 +30,14 @@ public class IsNotEmptySqlNode extends IsEmptySqlNode {
   public boolean apply(DynamicContext context) {
     Object value = evaluator.evaluate(property, context.getBindings());
     if (!isEmpty(value)) {
-      context.appendSql(prepend);
-      contents.apply(context);
+      DynamicContext childCtx = new DynamicContext(context);
+      if( contents.apply(childCtx) ){
+        String sql = childCtx.getSql();
+        if( !"".equals(sql) ){
+          context.appendSql(prepend);
+          context.appendSql(sql);
+        }
+      }
       return true;
     }
     return false;

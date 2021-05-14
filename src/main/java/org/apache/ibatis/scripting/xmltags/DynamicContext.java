@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2021 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -51,6 +51,11 @@ public class DynamicContext {
     }
     bindings.put(PARAMETER_OBJECT_KEY, parameterObject);
     bindings.put(DATABASE_ID_KEY, configuration.getDatabaseId());
+  }
+
+  //add by jun.zhao 2021/5/14
+  public DynamicContext(DynamicContext ctx) {
+    this.bindings = ctx.bindings;
   }
 
   public Map<String, Object> getBindings() {
