@@ -46,6 +46,7 @@ public class IsEmptySqlNode implements SqlNode {
           context.appendSql(sql);
         }
       }
+      return true;
     }
     return false;
   }
