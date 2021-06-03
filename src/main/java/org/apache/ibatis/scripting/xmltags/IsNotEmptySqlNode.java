@@ -15,6 +15,12 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
+import org.apache.ibatis.parsing.GenericTokenParser;
+import org.apache.ibatis.parsing.TokenHandler;
+import org.apache.ibatis.session.Configuration;
+
+import java.util.Map;
+
 /**
  * @author jun.zhao
  */
@@ -30,9 +36,9 @@ public class IsNotEmptySqlNode extends IsEmptySqlNode {
   public boolean apply(DynamicContext context) {
     Object value = evaluator.evaluate(property, context.getBindings());
     if (!isEmpty(value)) {
-      DynamicContext childCtx = new DynamicContext(context);
-      if( contents.apply(childCtx) ){
-        String sql = childCtx.getSql();
+      DynamicContext sharedBindingCtx = new SharedBindingDynamicContext(context);
+      if( contents.apply(sharedBindingCtx) ){
+        String sql = sharedBindingCtx.getSql();
         if( !"".equals(sql) ){
           context.appendSql(prepend);
           context.appendSql(sql);
@@ -42,5 +48,7 @@ public class IsNotEmptySqlNode extends IsEmptySqlNode {
     }
     return false;
   }
+
+
 
 }

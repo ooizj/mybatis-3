@@ -15,8 +15,11 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
+import org.apache.ibatis.session.Configuration;
+
 import java.lang.reflect.Array;
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * @author jun.zhao
@@ -38,9 +41,9 @@ public class IsEmptySqlNode implements SqlNode {
   public boolean apply(DynamicContext context) {
     Object value = evaluator.evaluate(property, context.getBindings());
     if (isEmpty(value)) {
-      DynamicContext childCtx = new DynamicContext(context);
-      if( contents.apply(childCtx) ){
-        String sql = childCtx.getSql();
+      DynamicContext sharedBindingCtx = new SharedBindingDynamicContext(context);
+      if( contents.apply(sharedBindingCtx) ){
+        String sql = sharedBindingCtx.getSql();
         if( !"".equals(sql) ){
           context.appendSql(prepend);
           context.appendSql(sql);
@@ -63,6 +66,21 @@ public class IsEmptySqlNode implements SqlNode {
     } else {
       return String.valueOf(value).equals("");
     }
+  }
+
+  protected static class SharedBindingDynamicContext extends DynamicContext {
+    private final DynamicContext src;
+
+    public SharedBindingDynamicContext(DynamicContext src) {
+      super(src);
+      this.src = src;
+    }
+
+    @Override
+    public int getUniqueNumber() {
+      return src.getUniqueNumber();
+    }
+
   }
 
 }
